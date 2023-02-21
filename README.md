@@ -12,4 +12,4 @@ API de Twitch: https://dev.twitch.tv/docs/api/
 
 -José Lara Navarro (Testing)
 
--Alejandro Paniagua Rodriguez (Front-End)
+-Alejandro Paniagua Rodríguez (Front-End)

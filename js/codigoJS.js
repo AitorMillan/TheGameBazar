@@ -23,6 +23,7 @@ function mostrarDeals(){
         ajustes["url"] = url;
 
         $.ajax(ajustes).done(function (deals) {
+            console.log(deals)
             var tabla = document.getElementById("dealsTabla");
             var info = document.getElementById("informacion");
             if(deals.length != 0){
@@ -67,3 +68,5 @@ function mostrarDeals(){
         }); 
     });	
 }
+
+

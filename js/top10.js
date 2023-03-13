@@ -27,6 +27,49 @@ function obtenerTopJuegos() {
                 "Client-Id": clientID,
             }
         };
+
+        $.ajax(ajustesAutorizacion).done(function (juegos) {
+            var tarjetas = document.getElementById("tarjetasZona");
+
+            for(var i = 0; i < juegos["data"].length; i++){
+                var tarjeta = document.createElement("div");
+                tarjeta.setAttribute("class","col-12 col-lg-6 col-xl-4 mb-4");
+
+                var cuerpo = document.createElement("div");
+                cuerpo.setAttribute("class","card text-center position-relative");
+
+                var colorCabezera = document.createElement("div");
+                colorCabezera.setAttribute("class","card-header");
+                colorCabezera.setAttribute("style","height: 160px;position: absolute;width: 100%;background-color:#1C2833");
+
+                var divImagen = document.createElement("div");
+                divImagen.setAttribute("class","divImagen");
+                divImagen.setAttribute("style","z-index: 1;text-align: center;");
+
+                var img = document.createElement("img");
+                var imagen = juegos["data"][i].box_art_url;
+                imagen = imagen.replace("{width}","150");
+                imagen = imagen.replace("{height}","180");
+                img.setAttribute("src",imagen);
+                img.setAttribute("alt","Imagen del juego de los top10");
+
+                var contenido = document.createElement("div");
+                contenido.setAttribute("class","card-body");
+                contenido.setAttribute("style","height:100px");
+
+                var titulo = document.createElement("h4");
+                titulo.setAttribute("class","card-title");
+                titulo.appendChild(document.createTextNode(juegos["data"][i].name));
+
+                tarjetas.appendChild(tarjeta);
+                tarjeta.appendChild(cuerpo);
+                cuerpo.appendChild(colorCabezera);
+                cuerpo.appendChild(divImagen);
+                divImagen.appendChild(img);
+                cuerpo.appendChild(contenido);
+                contenido.appendChild(titulo);
+            }
+        });
     });
 }
 

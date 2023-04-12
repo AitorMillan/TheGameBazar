@@ -51,11 +51,37 @@ function mostrarDeals(){
         tiendaCol.innerHTML = "<b>Tienda / Enlace</b>";
         
         var precioCol = columna.insertCell();
-        precioCol.innerHTML = "<b>Precio</b>";
-        
+        precioCol.innerHTML = "<b>Precio </b>";
+
+        var iconAbajoT = document.createElement("i");
+        iconAbajoT.setAttribute("class","bi bi-caret-down-fill ml-3 ml-md-0");
+        iconAbajoT.setAttribute("id","abajoprecio");
+        iconAbajoT.setAttribute("onclick","ordenarBoton('abajo','precio')");
+
+        var iconArribaT = document.createElement("i");
+        iconArribaT.setAttribute("class","bi bi-caret-up-fill ml-3 ml-md-0 d-none");
+        iconArribaT.setAttribute("id","arribaprecio")
+        iconArribaT.setAttribute("onclick","ordenarBoton('arriba','precio')");
+
+        precioCol.appendChild(iconAbajoT);
+        precioCol.appendChild(iconArribaT);
+
         var descuentoCol = columna.insertCell();
         descuentoCol.setAttribute("class","d-none d-sm-none d-md-block")
-        descuentoCol.innerHTML = "<b>Descuento</b>";
+        descuentoCol.innerHTML = "<b>Descuento </b>";
+
+        var iconAbajoD = document.createElement("i");
+        iconAbajoD.setAttribute("class","bi bi-caret-down-fill");
+        iconAbajoD.setAttribute("id","abajodescuento");
+        iconAbajoD.setAttribute("onclick","ordenarBoton('abajo','descuento')");
+
+        var iconArribaD = document.createElement("i");
+        iconArribaD.setAttribute("class","bi bi-caret-up-fill d-none");
+        iconArribaD.setAttribute("id","arribadescuento")
+        iconArribaD.setAttribute("onclick","ordenarBoton('arriba','descuento')");
+
+        descuentoCol.appendChild(iconAbajoD);
+        descuentoCol.appendChild(iconArribaD);
 
         deals.forEach(deal => {
             var fila = tabla.insertRow();
@@ -68,8 +94,17 @@ function mostrarDeals(){
             
             var tiendaFila = fila.insertCell();
             tiendaFila.setAttribute("name", nombreBuscar)
-            tiendaFila.innerHTML = "<a href="+deal.Enlace+" rel='external' target='_blank' onclick=registrarJuego('"+nombreBuscar+"')>"+deal.Tienda+"</a>";
             
+            var url = document.createElement("a");
+            url.setAttribute("href", deal.Enlace);
+            url.setAttribute("rel","external");
+            url.setAttribute("target","blank");
+            url.setAttribute("name",nombreBuscar)
+            url.addEventListener("mouseup",registrarJuegoRaton);
+            url.innerHTML = deal.Tienda;
+
+            tiendaFila.appendChild(url);
+
             var precioFila = fila.insertCell();
             precioFila.innerHTML = deal.Precio+"€"+"<p class='d-sm-block d-md-none mb-0'>Dto: "+Math.floor(deal.Descuento)+"%<p>";
             
@@ -87,6 +122,7 @@ function mostrarDeals(){
 
 
 function obtenerTopJuegos() {
+    var contadorImg = 1;
     var tarjetas = document.getElementById("tarjetasZona");
 
     divBarra.setAttribute("class","progress")
@@ -117,12 +153,27 @@ function obtenerTopJuegos() {
             divImagen.setAttribute("class","divImagen");
             divImagen.setAttribute("style","z-index: 1;text-align: center;");
 
+            
             var img = document.createElement("img");
             var imagen = juego.Poster;
             imagen = imagen.replace("{width}","150");
             imagen = imagen.replace("{height}","180");
             img.setAttribute("src",imagen);
             img.setAttribute("alt","Imagen del juego de los top10");
+            
+            var imagenPuntuacionD = document.createElement("img");
+
+            if(contadorImg < 4) {
+                img.setAttribute("class","ml-5")
+
+                imagenPuntuacionD.setAttribute("src","static/img/medalla"+contadorImg+".png")
+                imagenPuntuacionD.setAttribute("id","imagenPutuacion");
+                imagenPuntuacionD.setAttribute("class","ml-2")
+
+                contadorImg++;
+            }else {
+                img.setAttribute("class","mt-3")
+            }
 
             var contenido = document.createElement("div");
             contenido.setAttribute("class","card-body");
@@ -137,6 +188,7 @@ function obtenerTopJuegos() {
             cuerpo.appendChild(colorCabezera);
             cuerpo.appendChild(divImagen);
             divImagen.appendChild(img);
+            divImagen.appendChild(imagenPuntuacionD);
             cuerpo.appendChild(contenido);
             contenido.appendChild(titulo);
         });
@@ -147,11 +199,19 @@ function obtenerTopJuegos() {
     }); 
 }
 
+
+function registrarJuegoRaton(e){
+    if (e.button === 1 || e.button === 0){ //Cuando se pulsa el medio y el izquierdo
+        registrarJuego(e.toElement.name)
+    }
+}
+
+
 function registrarJuego(nombre){
-    var juego = document.getElementsByName(nombre)[0].firstChild.toString();
-    var tienda = document.getElementsByName(nombre)[1].firstChild.firstChild.toString();
+    var juego = document.getElementsByName(nombre)[0].firstChild.textContent;
+    var tienda = document.getElementsByName(nombre)[1].firstChild.firstChild.textContent;
     
-    var fecha = obtenerFecha("ingles","-")
+    var fecha = obtenerFecha("ingles","-");
 
     $.ajax({
         method: "PUT",
@@ -180,12 +240,12 @@ function iniciarSesion(){
     }else{
         $.ajax({
             method: "PUT",
-            url: "/iniciarSesion/"+nombre.value+";"+contra.value,
+            url: "/iniciarSesion/"+nombre.value.charAt(0).toUpperCase() + nombre.value.slice(1)+";"+contra.value,
             dataType: "json",
         }).done(function(usuario) {
             document.cookie = "usuario ="+ usuario['nombre']+"; expires = " + new Date(2068, 1, 02, 11, 20).toUTCString() + ";Path=/";
 
-            window.location.href = '/'; 
+            window.location.href = '/administracion.html'; 
         }).fail(function() {
             errorNombre.innerHTML = "Introduce un <b>campo</b> valido";
             errorContra.innerHTML = "Introduce un <b>campo</b> valido";
@@ -230,7 +290,7 @@ function RegistrarAdmin(){
     }else{
         $.ajax({
             method: "PUT",
-            url: "/registrarUsuario/"+nombre.value+";"+contra.value,
+            url: "/registrarUsuario/"+nombre.value.charAt(0).toUpperCase() + nombre.value.slice(1)+";"+contra.value,
             dataType: "json",
         }).done(function(respuesta) {
             $("#botonCerrarModal").click();
@@ -334,38 +394,175 @@ function crearBoton() {
 }
 
 
-function crearGraficas(){
-    // Obtener una referencia al elemento canvas del DOM
-    const $grafica = document.querySelector("#grafica");
-    // Las etiquetas son las porciones de la gráfica
-    const etiquetas = ["Steam", "Epic Games", "GOG", "Origin"]
-    // Podemos tener varios conjuntos de datos. Comencemos con uno
-    const datosIngresos = {
-        data: [1500, 400, 2000, 7000], // La data es un arreglo que debe tener la misma cantidad de valores que la cantidad de etiquetas
-        // Ahora debería haber tantos background colors como datos, es decir, para este ejemplo, 4
-        backgroundColor: [
-            'rgba(163,221,203,0.2)',
-            'rgba(232,233,161,0.2)',
-            'rgba(230,181,102,0.2)',
-            'rgba(229,112,126,0.2)',
-        ],// Color de fondo
-        borderColor: [
-            'rgba(163,221,203,1)',
-            'rgba(232,233,161,1)',
-            'rgba(230,181,102,1)',
-            'rgba(229,112,126,1)',
-        ],// Color del borde
-        borderWidth: 1,// Ancho del borde
-    };
-    new Chart($grafica, {
-        type: 'pie',// Tipo de gráfica. Puede ser dougnhut o pie
-        data: {
-            labels: etiquetas,
-            datasets: [
-                datosIngresos,
-                // Aquí más datos...
-            ]
-        },
+function ordenarBoton(orden,tipo){
+    var elemento = document.getElementById(orden+tipo);
+    var numColumna;
+
+    if(orden === "abajo"){
+        var elementoArriba = document.getElementById("arriba"+tipo);
+        elementoArriba.setAttribute("class","bi bi-caret-up-fill ml-3 ml-md-0");
+        elemento.setAttribute("class","bi bi-caret-down-fill ml-3 ml-md-0 d-none");
+
+        if(tipo === "precio"){
+            numColumna = 2;
+        }else{
+            numColumna = 3;
+        }
+
+        ordenarTabla(numColumna,"ascendente");
+    
+    }else{
+        var elementoAbajo = document.getElementById("abajo"+tipo);
+        elementoAbajo.setAttribute("class","bi bi-caret-down-fill ml-3 ml-md-0");
+        elemento.setAttribute("class","bi bi-caret-up-fill ml-3 ml-md-0 d-none");
+        
+        if(tipo === "precio"){
+            numColumna = 2;
+        }else{
+            numColumna = 3;
+        }
+
+        ordenarTabla(numColumna,"descendente");
+        
+    }
+
+}
+
+
+function ordenarTabla(columna,tipo){
+    var tabla, filas, entrar, i, x, y, cambiador;
+    tabla = document.getElementById("dealsTabla");
+    entrar = true;
+
+    while (entrar) {
+        entrar = false;
+
+        filas = tabla.rows;
+
+        for (i = 1; i < (filas.length - 1); i++) {
+            cambiador = false;
+        
+            x = parseFloat(filas[i].getElementsByTagName("TD")[columna].firstChild.textContent.slice(0,-1));
+            y = parseFloat(filas[i + 1].getElementsByTagName("TD")[columna].firstChild.textContent.slice(0,-1));
+
+            if (x > y && tipo === "ascendente") {
+                cambiador = true;
+                break;
+            }
+
+            if(x < y && tipo === "descendente"){
+                cambiador = true;
+                break;
+            }
+
+        }
+
+        if(cambiador){
+            filas[i].parentNode.insertBefore(filas[i + 1], filas[i]);
+            entrar = true;
+        }
+    }
+}
+
+
+function crearCirculoTiendas(datos){
+    $.ajax({
+        method: "GET",
+        url: "/obtenerEstadisticas",
+        dataType: "json",
+        headers: {
+            "cabecera": "graficaTiendas"
+        }
+    }).done(function(respuesta) {
+        nombresTiendas = []
+        cuentaTiendas = []
+        cont = 0;
+
+        respuesta['Resultado'].forEach(dato => {
+            nombresTiendas[cont] = dato['NombreMostrar'];
+            cuentaTiendas[cont] = dato['Cuenta']
+            cont++;
+        });
+
+        const $grafica = document.querySelector("#circulo");
+        const etiquetas = nombresTiendas;
+
+        const datosTiendas = {
+            data: cuentaTiendas,
+            backgroundColor: [
+                'rgba(176,224,230,0.2)',
+                'rgba(0,191,255,0.2)',
+                'rgba(70,130,180,0.2)',
+                'rgba(0,0,128,0.2)',
+                'rgba(106,90,205,0.2)',
+            ],
+            borderColor: [
+                'rgba(176,224,230,1)',
+                'rgba(0,191,255,1)',
+                'rgba(70,130,180,1)',
+                'rgba(0,0,128,1)',
+                'rgba(106,90,205,1)',
+            ],
+            borderWidth: 1,
+        };
+        new Chart($grafica, {
+            type: 'pie',
+            data: {
+                labels: etiquetas,
+                datasets: [
+                    datosTiendas,
+                ]
+            },
+        });
+    }).fail(function() {
+        console.log("Ha habido un problema")
+    });
+}
+
+function crearBarrasAnios(){
+    $.ajax({
+        method: "GET",
+        url: "/obtenerEstadisticas",
+        dataType: "json",
+        headers: {
+            "cabecera": "graficaAnios"
+        }
+    }).done(function(respuesta) {
+
+        var datos2022 = respuesta['Resultado'][0]['NombreMostrar'] == "2022" ? respuesta['Resultado'][0]['Cuenta'] : respuesta['Resultado'][1]['Cuenta'];;
+        var datos2023 = respuesta['Resultado'][0]['NombreMostrar'] == "2023" ? respuesta['Resultado'][0]['Cuenta'] : respuesta['Resultado'][1]['Cuenta'];
+
+        const $grafica = document.querySelector("#barras");
+        const etiquetas = [""] //Etiquetas eje X. 
+
+        const datosClick2023 = {
+            label: "Clicks en 2023",
+            data: [datos2023], 
+            backgroundColor: 'rgba(70,130,180, 0.2)',
+            borderColor: 'rgba(70,130,180, 1)',
+            borderWidth: 1,
+        };
+
+        const datosClick2022 = {
+            label: "Clicks en 2022",
+            data: [datos2022], 
+            backgroundColor: 'rgba(25,25,112, 0.2)', 
+            borderColor: 'rgba(25,25,112, 1)', 
+            borderWidth: 1,
+        };
+
+        new Chart($grafica, {
+            type: 'bar',
+            data: {
+                labels: etiquetas,
+                datasets: [
+                    datosClick2023,
+                    datosClick2022,
+                ]
+            },
+        });
+    }).fail(function() {
+        console.log("Ha habido un problema")
     });
 }
 
@@ -388,7 +585,8 @@ function main(){
         var textoFecha = document.getElementById("DiaAdmin");
         textoFecha.innerHTML = "<b>Día:</b> "+ obtenerFecha("español","/");
 
-        crearGraficas();
+        crearCirculoTiendas();
+        crearBarrasAnios();
     }
 
 }

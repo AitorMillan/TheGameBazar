@@ -72,14 +72,27 @@ nav {
     border-color: #021d34;
 }
 
+#imagenPutuacion{
+    height: 50px;
+    margin-top: 10rem;
+}
+
 #barraDeProceso{
     background-color: #021d34;
 }
 
-#grafica{
-    max-width: 500px;
+#circuloMovil{
+    max-width: 400px;
+    min-width: 250px;
+    max-height: 400px;
+    min-height: 200px !important;
 }
 
+#barrasMovil{
+    max-width: 400px;
+    min-width: 200px;
+    min-height: 350px !important;
+}
 ::-webkit-scrollbar{
     width: 10px;     /* Tamaño del scroll en vertical */
     height: 8px;    /* Tamaño del scroll en horizontal */

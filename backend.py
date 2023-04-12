@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, make_response, request, session
+from flask import Flask, render_template, jsonify, make_response, request, session, url_for
 from flask_session import Session
 import json
 import sqlite3
@@ -42,7 +42,6 @@ def administracion():
         return render_template('administracion.html')
     else:
         return render_template('index.html') 
-
 
 @app.route('/obtenerJuegos/<juego>', methods=['PUT'])
 def obtenerJuegos(juego):
@@ -219,6 +218,7 @@ def crearBBDD(): # pragma: no cover
             # Insertamos datos de ejemplo en la tabla Juego
             conn.execute("INSERT INTO Juego (título, tienda, fecha_click) VALUES ('Outlast', 'Steam', '2022-01-01')")
             conn.execute("INSERT INTO Juego (título, tienda, fecha_click) VALUES ('Ryse: Son of Rome', 'Steam', '2022-02-15')")
+            conn.execute("INSERT INTO Juego (título, tienda, fecha_click) VALUES ('Resident Evil 4', '2Game', '2023-03-15')")
 
             # Guardamos los cambios y cerramos la conexión
             conn.commit()

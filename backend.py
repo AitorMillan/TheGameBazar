@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, make_response, request, session, url_for
+from flask import Flask, render_template, jsonify, make_response, request, session
 from flask_session import Session
 import json
 import sqlite3
@@ -218,7 +218,11 @@ def crearBBDD(): # pragma: no cover
             # Insertamos datos de ejemplo en la tabla Juego
             conn.execute("INSERT INTO Juego (título, tienda, fecha_click) VALUES ('Outlast', 'Steam', '2022-01-01')")
             conn.execute("INSERT INTO Juego (título, tienda, fecha_click) VALUES ('Ryse: Son of Rome', 'Steam', '2022-02-15')")
+            conn.execute("INSERT INTO Juego (título, tienda, fecha_click) VALUES ('The Witcher', 'Steam', '2022-01-15')")
+            
             conn.execute("INSERT INTO Juego (título, tienda, fecha_click) VALUES ('Resident Evil 4', '2Game', '2023-03-15')")
+            conn.execute("INSERT INTO Juego (título, tienda, fecha_click) VALUES ('Total War: Troy', 'Epic Games Store', '2023-02-15')")
+            conn.execute("INSERT INTO Juego (título, tienda, fecha_click) VALUES ('The Witcher 2: Assassins of Kings Enhanced Edition', 'Steam', '2023-01-15')")
 
             # Guardamos los cambios y cerramos la conexión
             conn.commit()
@@ -323,7 +327,7 @@ def comprobarJuegos(juego):
 
 configurar_logging()
 logging.info("Preparando servidor...")
-#obtenerTop10()
+obtenerTop10()
 logging.info('Archivo de Twitch preparado') 
 crearBBDD()
 logging.info('Base de datos preparada')

@@ -1,0 +1,116 @@
+@charset "utf-8";
+/* Autor: Alejandro, Aitor y Jose
+ * Fecha: 08/03/2023
+ * Módulo: Laboratorio ISI
+ */
+
+@media (min-width: 576px) {  
+    .mediaQuery {
+        width: 50%;
+    }
+}
+
+@media (max-width: 991.98px) { 
+    .mediaQuery {
+        width: 75%;
+    }
+}
+
+body{
+    padding-top: 5px;
+}
+
+header {
+    padding-bottom: 6px;
+}
+
+header, footer, body {
+    background-color: #021d34;
+}
+
+main {
+    background-color: white;
+    padding-bottom: 20px;
+    min-height: 318px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+nav {
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.position-absolute {
+    right: 15px;    
+}
+
+.text-info{
+    color: #021d34!important;
+}
+
+.botonMismoColor{
+    background-color: #021d34;
+    border-color: #021d34;
+}
+
+.btn-outline-mismoColor{
+    background-color: inherit;
+    color: black;
+    border-color: #021d34;
+}
+
+.btn-outline-mismoColor:hover{
+    color: white;
+    background-color: #021d34;
+    border-color: #021d34;
+}
+
+.btn-outline-mismoColor.active{
+    color: white;
+    background-color: #021d34;
+    border-color: #021d34;
+}
+
+#imagenPutuacion{
+    height: 50px;
+    margin-top: 10rem;
+}
+
+#barraDeProceso{
+    background-color: #021d34;
+}
+
+#circuloMovil{
+    max-width: 400px;
+    min-width: 250px;
+    max-height: 400px;
+    min-height: 200px !important;
+}
+
+#barrasMovil{
+    max-width: 400px;
+    min-width: 200px;
+    min-height: 350px !important;
+}
+::-webkit-scrollbar{
+    width: 10px;     /* Tamaño del scroll en vertical */
+    height: 8px;    /* Tamaño del scroll en horizontal */
+}
+
+::-webkit-scrollbar-thumb{
+    background: #ccc;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #b3b3b3;
+    box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.2);
+}
+
+::-webkit-scrollbar-thumb:active {
+    background-color: #999999;
+}
+
+::-webkit-scrollbar-track{
+    background: inherit;
+}

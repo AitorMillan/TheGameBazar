@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="title" content="The Game Bazar">
+    <meta name="description" content="La pagina trata de una pagina para un laboratorio">
+    <title>The Game Bazar</title>
+
+    <link rel="icon" href="{{ url_for('static', filename= 'img/icono.png') }}">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- Personalizado -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/css.css') }}">
+
+</head>
+<body>
+    <span class="d-none" id="OpcionSalir">Administracion</span>
+    <header class="container-fluid">
+        <div class="container d-block d-lg-flex justify-content-center">
+            <div class="text-center">
+                <a class="d-none d-xxl-block d-xl-block" href="{{ url_for('index') }}"><img src="{{ url_for('static', filename= 'img/logo.png') }}" alt="Logo" width="450" height="150"></a>
+                <a class="d-none d-block d-xl-none" href="{{ url_for('index') }}"><img src="{{ url_for('static', filename= 'img/logo.png') }}" alt="Logo" width="350" height="100"></a>
+            </div>
+        </div>
+    </header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light container position-relative">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menuContenido"
+            aria-controls="menuContenido" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div id="menu" class="position-absolute"></div>
+        <div class="collapse navbar-collapse" id="menuContenido">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{ url_for('index') }}">Inicio <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/top10.html">Top 10 juegos</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <main class="container">
+        <h3 class="d-block d-md-none text-center pt-2">Gestión del sistema</h3>
+        <div class="row">
+            <!-- COLUMNA DEL MENU-->
+            <div id="columnaOpciones" class="col-md-6 col-lg-3 ">
+                <h2 class="pt-2 text-center d-none d-md-block">¡Bienvenido!</h2>
+                <div class="border rounded p-2">
+                    <p id="NombreAdmin"></p>
+                    <p><b>Recuerda:</b> Divertirse siempre.</p>
+                    <p id="DiaAdmin"></p>
+                    
+                    <p class="text-center"><b>Ten un buen día</b></p>
+                    <p class="text-center">ʕ•ᴥ•ʔ</p>
+                </div>
+                <button type="button" class="btn botonMismoColor text-white w-100 mt-3" data-toggle="modal" data-target="#myModal"> Añadir Administrador</button>
+            
+                <div class="modal fade" id="myModal" role="dialog">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Añadir nuevo administrador</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <form class="p-3" name="formularioInicioSesion">
+                                <div class="form-group">
+                                    <label for="usuario">*Usuario: </label>
+                                    <input type="text" class="form-control" id="usuario" name="usuario" maxlength="10">
+                                    <div id="errorUsu" class="text-danger"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="pass">*Contraseña: </label>
+                                    <input type="password" class="form-control" id="pass" name="pass" maxlength="20">
+                                    <div id="errorContra" class="text-danger"></div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-block botonMismoColor text-white" type="button" onclick="RegistrarAdmin()">Registrar</button> 
+                            <button id="botonCerrarModal" type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+
+                <button type="button" class="btn botonMismoColor text-white w-100 mt-2 mb-3" data-toggle="modal" data-target=".bd-example-modal-lg" onclick="empezarTesting()">Realizar testing</button>
+                <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title mx-auto">Testing en el frontend</h4>
+                            </div>
+                            <div id="contenidoTesting" class="modal-body">
+                                <div class="progress invisible" id="divBarraDeProceso">
+                                    <div  id="barraDeProceso" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 10%"></div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-block botonMismoColor text-white" data-dismiss="modal">Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- COLUMNA DEL CONTENIDO PRINCIPAL-->
+            <div id="columnaContenido" class="col-md-6 col-lg-9">
+                <h2 id="tituloZona" class="text-center pt-2 d-none d-md-block">Gestión del sistema</h2>
+                <canvas id="circulo" class="mb-3"></canvas>
+                <canvas id="barras"></canvas>
+            </div>
+             
+        </div>
+        <button type="button" class="btn btn-primary d-none" data-toggle="modal" data-target=".correcto" id="botonCorrecto"></button>
+        <div class="modal fade correcto" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="alert alert-success m-0 text-center">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <span id="textoCorrecto"><b>¡Correcto!</b> Se ha añadido un administrador con exito</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="container-fluid pt-3">
+        <div class="container d-flex justify-content-between aling-items-center pb-3" id="share">
+            <div class="w-100 m-auto text-center">
+                <p class="m-0 text-white">Laboratorio Integración De Sistemas Informaticos</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Optional JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@latest/dist/Chart.min.js"></script>
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+
+    <!-- Personalizado -->
+    <script src="{{ url_for('static', filename= 'js/codigoJS.js') }}"></script>
+    <script src="{{ url_for('static', filename= 'js/testing.js') }}"></script>
+</body>
+</html>

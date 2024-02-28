@@ -1,6 +1,7 @@
+Flask>=1.1.2
 PyJWT==1.7.1
 FLask-SQLAlchemy>= 2.5
 requests==2.28.2
-Flask-Session==0.4.0
+Flask-Session==0.6.0
 pytest==7.3.0
 pytest-cov==4.0.0

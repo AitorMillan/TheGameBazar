@@ -1,5 +1,6 @@
 from flask import Flask, render_template, jsonify, make_response, request, session
 from flask_session import Session
+from datetime import datetime
 import json
 import sqlite3
 import hashlib
@@ -256,23 +257,40 @@ def obtenerAutorizacion():
 
 
 def obtenerTop10():
-    
-    url = "https://api.twitch.tv/helix/games/top?first=50"
+    archivo_json = 'juegos_top10.json'
+    actualizacion = True
 
-    autorizacion = obtenerAutorizacion()
+    # Verificar si el archivo existe
+    if os.path.exists(archivo_json):
+        # Obtener la fecha de modificación del archivo y la fecha actual
+        mod_time = os.path.getmtime(archivo_json)
+        fecha_modificacion = datetime.fromtimestamp(mod_time)
+        fecha_actual = datetime.now()
+        
+        # Comparar si el archivo fue modificado el mismo día
+        if fecha_modificacion.date() == fecha_actual.date():
+            actualizacion = False
 
-    headers = {
-        'Client-ID': CLIENTID,
-        'Authorization': 'Bearer ' + autorizacion['access_token']
-    }
+    if actualizacion:
+        url = "https://api.twitch.tv/helix/games/top?first=50"
 
-    juegos = requests.request("GET", url, headers=headers, data={}, files={})
+        autorizacion = obtenerAutorizacion()
 
-    respuestaFinal = darFormatoJuegos(json.loads(juegos.text))
+        headers = {
+            'Client-ID': CLIENTID,
+            'Authorization': 'Bearer ' + autorizacion['access_token']
+        }
 
-    global JUEGOSTOP10 
-    JUEGOSTOP10 = respuestaFinal
+        juegos = requests.request("GET", url, headers=headers, data={}, files={})
 
+        respuestaFinal = darFormatoJuegos(json.loads(juegos.text))
+
+        global JUEGOSTOP10 
+        JUEGOSTOP10 = respuestaFinal
+    else:
+        # Leer el contenido del archivo ya que está actualizado
+        with open(archivo_json, 'r') as archivo:
+            JUEGOSTOP10 = json.load(archivo)
 
 def darFormatoJuegos(juegos):
     resultado = "["
@@ -287,8 +305,11 @@ def darFormatoJuegos(juegos):
 
     resultado = resultado.rstrip(resultado[-1]) + "]" #Esto es para eliminar la , final
 
-    return json.loads(resultado)
+     # Guardar el diccionario como un archivo JSON
+    with open('juegos_top10.json', 'w') as archivo:
+        json.dump(json.loads(resultado), archivo, indent=4)
 
+    return json.loads(resultado)
 
 def darFormatoOfertas(juegos,tiendas):
     resultado = "["
